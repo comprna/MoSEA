@@ -1,0 +1,1 @@
+cancer	motif_id	event	kmer	seq_len	chromosome	sequence_start	sequence_end	strand	motif_start	motif_end	mutation_start	mutation_end	variant_class	variant_type	ref_allele	tumor_allele_1	tumor_allele_2	pateint	sample_barcode

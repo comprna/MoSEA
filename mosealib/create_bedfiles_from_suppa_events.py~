@@ -1,0 +1,557 @@
+'''
+script to create .bed files from the alternative spliced events.
+input:file with filename:<cancer_type>_event_dpsi-<SE_type>_paired-filtered.txt 
+    contains columns: 
+    	[1] cancer : BRCA
+    	[2] event : VPS13A|23230;SE:chr9:79897190-79898271:79898387-79898463:+
+    	[3] nmean : 0.631531374927508
+    	[4] tmean : 0.564846366844214
+    	[5] nmedian : 0.70777035404
+    	[6] tmedian : 0.625395956035
+    	[7] meandiff : -0.0666850080832945
+    	[8] mediandiff : -0.082374398005
+    	[9] wilcox : 0.0687984924239605
+    	[10] wilcoxa : 0.182503207881309
+					
+
+output file: create bed files by spliting 'event' columns
+	should contain columns: 
+		[1] chr 
+		[2] start
+		[3] end
+		[4] name(event_id [col : 2])
+		[5] score(mediandiff [col:8])
+		[6] strand
+
+#read file
+#get values: event_type, cancer_type
+'''
+
+import pandas as pd
+import sys
+
+#get args
+def main():
+	event_type = "al"
+	cancer_type = "brca"
+
+	file_location = "/home/babita/Documents/tcga_miRNA/tables/"
+	file_name = cancer_type + "_event_dpsi-" + event_type.lower() + "_paired-filtered.txt"
+	input_file = file_location + file_name
+
+	file_name = cancer_type + "_event_dpsi-" + event_type.lower() + ".bed"
+	output_file = file_location + file_name
+
+	with open(output_file, "w"): pass
+
+	#func_mapping = {"A": print_a, "B": print_b}
+	#func_mapping["A"]()
+	call_event_func = {"SE": fun_SE_bedfile, 
+						"MX": fun_MX_bedfile,
+						"RI": fun_RI_bedfile,
+						"A5": fun_A5_bedfile,
+						"A3": fun_A3_bedfile, 
+						"AF": fun_AF_bedfile,
+						"AL": fun_AL_bedfile }
+
+	call_event_func[event_type.upper()](input_file, output_file)
+
+
+def _split_line(row):
+	row = row.split('\t')
+	return row[1], row[7], row[9]
+
+def _print_out_msg(out_file):
+	print("File created: {}".format(out_file))
+
+def fun_SE_bedfile(in_file, out_file):
+	'''
+	ref: see Fig.2 suppa documentaion of SE e1 & s1..descriptions
+	https://bitbucket.org/regulatorygenomicsupf/suppa
+	Example event id: (e1-s2:e2-s3)
+	CTCFL|140690;SE:chr20:56064269-56073610:56073757-56078492:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+	    	for line in f:
+	    		event, mediandiff, wilcoxa = _split_line(line)
+
+	        	ev_all = event.split(';')
+	        	ev_coord = ev_all[1]
+
+	        	ev_all = ev_coord.split(':')
+
+	        	ev_type = ev_all[0]
+	        	ev_chr = ev_all[1]
+	        	ev_e1_s2 = ev_all[2]
+	        	ev_e2_s3 = ev_all[3]
+	        	ev_strand = ev_all[4]
+
+	        	ev_e1_s2 = ev_e1_s2.split('-')
+	        	#take whole intron
+	        	e1 = ev_e1_s2[0]
+	        	#s2 = ev_e1_s2[1]
+	        	ev_e2_s3 = ev_e2_s3.split('-')
+	        	#e2 = ev_e2_s3[0]
+	        	#take whole intron
+	        	s3 = ev_e2_s3[1]
+
+	        	#fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr, s2,
+	        	#e2, event, mediandiff, ev_strand))
+	        	fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr, e1,
+	        	s3, event, mediandiff, ev_strand))
+  	
+  	_print_out_msg(out_file)
+	#print("File created: {}".format(out_file))
+
+	       		
+def fun_MX_bedfile(in_file, out_file):
+	'''
+	ref: see Fig.2 suppa documentaion of MX e1 & s1..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: (e1-s2:e2-s4:e1-s3:e3-s4)
+	#SMPD4|55627;MX:chr2:130922018-130925031:130925163-130934127:130922018-130932487:130932573-130934127:-
+	#A2BP1|54715;MX:chr16:7703949-7714931:7714970-7726776:7703949-7721559:7721601-7726776:+
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			ev_strand = ev_all[6]
+
+			ev_e1_s2 = ev_all[2]
+			ev_e2_s4 = ev_all[3]
+			#ev_e1_s3 = ev_all[4]
+			#ev_e3_s4 = ev_all[5]
+
+					   
+			ev_e1_s2 = ev_e1_s2.split('-') 
+			e1 = ev_e1_s2[0]
+			s2 = ev_e1_s2[1]
+					  
+			ev_e2_s4 = ev_e2_s4.split('-')
+			#e2 = ev_e2_s4[0]
+			s4 = ev_e2_s4[1]
+					  
+			#ev_e1_s3 = ev_e1_s3.split('-')
+			#e1 = ev_e1_s3[0]
+			#s3 = ev_e1_s3[1]
+					  
+			#ev_e3_s4 = ev_e3_s4.split('-')
+			#e3 = ev_e3_s4[0]
+			#s4 = ev_e3_s4[1]
+
+
+			#event_mx1 = event + ";MX1"
+			#event_mx2 = event + ";MX2"
+
+			#if(ev_strand == '+'):
+				#MX1 is the first exon from 5' direction, always
+				#MX1 = s2 + "\t" + e2
+				#MX2 = s3 + "\t" + e3
+
+			#if(ev_strand == '-'):
+				#MX1= s3 + "\t" + e3
+				#MX2 = s2 + "\t" + e2
+			
+			MX = e1 + "\t" + s4
+
+			#fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,MX1,event_mx1,
+			#mediandiff, ev_strand)) 
+			#fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,MX2,event_mx2,
+			#mediandiff, ev_strand))
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr, MX, event,
+			mediandiff, ev_strand)) 
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)
+
+
+def fun_RI_bedfile(in_file, out_file):
+	'''
+	##ref: see Fig.2 suppa documentaion of RI e1 & s1..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: 
+	#TIAL1|7073;RI:chr10:121336123:121336262-121336592:121336715:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			s1 = ev_all[2]
+  			e1_s2 = ev_all[3]
+			e2 = ev_all[4]
+			ev_strand = ev_all[5]
+  
+			e1_s2 = e1_s2.split('-') 
+			e1 = e1_s2[0]
+			s2 = e1_s2[1]
+
+			RI = s1 + "\t" + e2
+
+			"""
+			#for taking both sides exon coordinates
+			event_ri1 = event + ";RI1"
+			event_ri2 = event + ";RI2"
+			if(ev_strand == '+'):
+				RI1 is the first exon-endfrom 5' direction, always
+				RI1 = s1 + "\t" + e1
+				RI2 = s2 + "\t" + e2
+
+			if(ev_strand == '-'):
+				RI1 = s2 + "\t" + e2
+				RI2 = s1 + "\t" + e1
+
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,RI1,event_ri1,
+			mediandiff, ev_strand)) 
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,RI2,event_ri2,
+			mediandiff, ev_strand)) 
+			"""
+
+			#For taking whole intron & whole exon-from both sides
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr, RI, event,
+			mediandiff, ev_strand))  
+			
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)
+
+
+def fun_A5_bedfile(in_file, out_file):
+	'''
+	##ref: see Fig.2 suppa documentaion of A5 e1,e2 & s3..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: (e2-s3:e1-s3)
+	#CUL7|9820;A5:chr6:43020534-43021360:43020534-43021449:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			ev_strand = ev_all[4]
+
+			if(ev_strand=="-"):
+				s3_e1 = ev_all[2]
+				s3_e2 = ev_all[3]
+				s3_e1 = s3_e1.split('-')
+				s3 = s3_e1[0]
+				e1 = s3_e1[1]
+
+				s3_e2 = s3_e2.split('-')
+				e2 = s3_e2[1]
+				'''
+				#for only A5 cassette exon 
+				fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,e1,e2,event,
+				mediandiff, ev_strand)) 
+				'''
+				#for whole intron + A5 cassette exon
+				fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,s3,e2,event,
+				mediandiff, ev_strand))
+
+			elif(ev_strand=="+"):
+				e2_s3 = ev_all[2]
+				e1_s3 = ev_all[3]
+				e2_s3 = e2_s3.split('-')
+				e2 = e2_s3[0]
+				s3 = e2_s3[1]
+
+				e1_s3 = e1_s3.split('-')
+				e1 = e1_s3[0]
+    
+				#fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,e1,e2,event,
+				#mediandiff, ev_strand)) 
+				#for whole intron + A5 cassette exon
+				fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,e1,s3,event,
+				mediandiff, ev_strand)) 
+			else:
+				print("Strand Error: Problem detected in A5 file")
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)
+
+
+def fun_A3_bedfile(in_file, out_file):
+	'''
+	##ref: see Fig.2 suppa documentaion of A3 e1 & s1..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: (e1-s2:e1-s3)
+	#ABCG2|9429;A3:chr4:89016761-89018605:89016751-89018605:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			ev_strand = ev_all[4]
+
+			if(ev_strand=="-"):
+				#eg.ABCG2|9429;A3:chr4:89016761-89018605:89016751-89018605:-   
+				ev_s2_e1 = ev_all[2]
+				ev_s2_e1 = ev_s2_e1.split('-')
+				s2 = ev_s2_e1[0]	
+				e1 = ev_s2_e1[1]	#discard
+
+				ev_s3_e1 = ev_all[3]
+				ev_s3_e1 = ev_s3_e1.split('-')
+				s3 = ev_s3_e1[0]
+
+				#for whole intron + A5 cassette exo
+				fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,s3,e1,event,
+				mediandiff, ev_strand))
+
+			elif(ev_strand=="+"):  
+				#eg. A2BP1|54715;A3:chr16:7568391-7629779:7568391-7629782:+ 
+				ev_e1_s2 = ev_all[2]
+				ev_e1_s2 = ev_e1_s2.split('-')
+				e1 = ev_e1_s2[0] #discard
+				#s2 = ev_e1_s2[1]
+
+				ev_e1_s3 = ev_all[3]
+				ev_e1_s3 = ev_e1_s3.split('-')
+				s3 = ev_e1_s3[1]
+
+				#for whole intron + A5 cassette exon
+				fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,e1,s3,event,
+				mediandiff, ev_strand))
+			else:
+				print("Strand Error: Problem detected in A3 file")
+
+			#fo.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(ev_chr,e1,e2,event,
+			#	mediandiff, ev_strand)) 
+
+
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)	
+
+
+def fun_AF_bedfile(in_file,out_file):
+	'''
+	##ref: see Fig.2 suppa documentaion of AF e1 & s1..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: (s1:e1-s3:s2:e2-s3)
+	#A2BP1|54715;AF:chr16:6069132:6069993-6704604:6533794:6533915-6704604:+
+	#A1CF|29974;AF:chr10:52619745-52623793:52623840:52619745-52645341:52645435:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			ev_strand = ev_all[6]
+
+			event_af1 = event + ";AF1"
+			event_af2 = event + ";AF2"
+
+
+			if(ev_strand=="+"):
+			#ABAT|18;AF:chr16:8768444:8768568-8829556:8806826:8807722-8829556:+;AF1
+			#(s1:e1-s3:s2:e2-s3)
+				s1 = ev_all[2]
+				ev_e1_s3 = ev_all[3]
+				s2 = ev_all[4]
+				ev_e2_s3 = ev_all[5]
+
+				ev_e2_s3 = ev_e2_s3.split('-')
+				e2 = ev_e2_s3[0]
+				s3 = ev_e2_s3[1]
+
+				ev_e1_s3 = ev_e1_s3.split('-')
+				e1 = ev_e1_s3[0]
+				s3 = ev_e1_s3[1]
+
+				'''
+				#for only AF exons
+				#af1 will be always the shorter distance first from the s3-exon
+				af1 = s2 + "\t" + e2
+				#af2 will be always the longer distance first from the s3-exon
+				af2 = s1 + "\t" + e1
+				'''
+				#for AF exons + intron
+				af1 = s2 + "\t" + s3
+				af2 = s1 + "\t" + s2
+
+			elif(ev_strand=="-"):
+				#eg:A1CF|29974;AF:chr10:52619745-52623793:52623840:52619745-52645341:52645435:-
+				#reverse mirror image of +ve strand
+				ev_s3_e2 = ev_all[2]
+				s2 = ev_all[3]
+				ev_s3_e1 = ev_all[4]
+				s1 = ev_all[5]
+
+				ev_s3_e2 = ev_s3_e2.split('-')
+				s3 = ev_s3_e2[0]
+				e2 = ev_s3_e2[1]
+
+				ev_s3_e1 = ev_s3_e1.split('-')
+				e1 = ev_s3_e1[1]
+
+				'''
+				#for only AF exons
+				#af1 will be always the shorter distance first from the s3-exon
+				af1 = e2 + "\t" + s2
+				#af2 will be always the longer distance first from the s3-exon
+				af2 = e1 + "\t" + s1
+				'''
+				#for AF exons + intron
+				af1 = s3 + "\t" + s2
+				af2 = s2 + "\t" + s1
+
+			else:
+				print("Problem detected in AF file!")
+
+
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,af1,event_af1,
+			mediandiff, ev_strand)) 
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,af2,event_af2,
+			mediandiff, ev_strand))  
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)
+
+
+def fun_AL_bedfile(in_file,out_file):
+	'''
+	##ref: see Fig.2 suppa documentaion of AL e1 & s1..descriptions
+	#https://bitbucket.org/regulatorygenomicsupf/suppa
+	#Example event id: (e1-s3:e3:e1-s2:e2)
+	#A2BP1|54715;AL:chr16:7759133-7759496:7759783:7759133-7760703:7763340:+
+	#AAA1|404744;AL:chr7:34682839:34682963-34768349:34743466:34743811-34768349:-
+	'''
+	fo = open(out_file, "a")
+	with open(in_file) as f:
+		next(f) #skip for header
+		for line in f:
+			event, mediandiff, wilcoxa = _split_line(line)
+
+			ev_all = event.split(';')	
+			ev_coord = ev_all[1]
+
+			ev_all = ev_coord.split(':')
+			ev_type = ev_all[0]
+			ev_chr = ev_all[1]
+			ev_strand = ev_all[6]
+
+			event_al1 = event + ";AL1" 
+			event_al2 = event + ";AL2"
+
+
+			if(ev_strand == "+"):
+			#AL:chr16:7759133-7759496:7759783:7759133-7760703:7763340:+
+			#(e1-s3:e3:e1-s2:e2) #incorrect -convention is longest exon first in figure but not correct in event_id
+			#(e1-s2:e2:e1-s3:e3) #correct
+
+				ev_e1_s2 = ev_all[2] 
+				e2 = ev_all[3]
+				ev_e1_s3 = ev_all[4]
+				e3 = ev_all[5]
+
+				ev_e1_s3 = ev_e1_s3.split('-')
+				e1 = ev_e1_s3[0]
+				s3 = ev_e1_s3[1]
+
+				ev_e1_s2 = ev_e1_s2.split('-')
+				e1 = ev_e1_s2[0]
+				s2 = ev_e1_s2[1]
+
+				'''
+				#for only Al exons
+				#al1 will be always the shorter distance first from the s3-exon
+				al1 = s2 + "\t" + e2
+				#al2 will be always the longer distance first from the s3-exon
+				al2 = s3 + "\t" + e3
+				'''
+				#for AL both exon + intron
+				al1 = e1 + "\t" + e2
+				al2 = e2 + "\t" + e3
+
+			elif(ev_strand=="-"):
+				#eg:AAA1|404744;AL:chr7:34682839:34682963-34768349:34743466:34743811-34768349:-
+				#(e3:s3-e1:e2:s2:e1)
+				#reverse mirror image of +ve strand
+				e3 = ev_all[2]
+				ev_s3_e1 = ev_all[3]
+				e2 = ev_all[4]
+				ev_s2_e1 = ev_all[5]
+
+				ev_s3_e1 = ev_s3_e1.split('-')
+				s3 = ev_s3_e1[0]
+				e1 = ev_s3_e1[1]
+
+				ev_s2_e1 = ev_s2_e1.split('-')
+				s2 = ev_s2_e1[0]
+
+				'''
+				#for only Al exons
+				#af1 will be always the shorter distance first from the s3-exon
+				al1 = e2 + "\t" + s2
+				#af2 will be always the longer distance first from the s3-exon
+				al2 = e3 + "\t" + s3
+				'''
+				#for AL both exon + intron
+				al1 = e2 + "\t" + e1
+				al2 = e3 + "\t" + e2
+
+			else:
+				print("Problem detected in AL file!")
+
+
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,al1,event_al1,
+			mediandiff, ev_strand)) 
+			fo.write("{}\t{}\t{}\t{}\t{}\n".format(ev_chr,al2,event_al2,
+			mediandiff, ev_strand))  
+
+	f.close()
+	fo.close()
+	_print_out_msg(out_file)
+
+if __name__ == "__main__":
+    main()
+
+
+
