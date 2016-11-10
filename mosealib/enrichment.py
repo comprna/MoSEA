@@ -74,6 +74,7 @@ def get_fasta_seq_dictonary(fa_file):
 
 	return dict_fa_length, dict_fa_count
 
+
 def _get_motif_count_values_for_dict(motif_ids, fields, fa_count_dict,
 									 fa_len_dict, count_file):
 	#returns various features of sequence and motif counts for creating dictonary
@@ -172,10 +173,10 @@ def calculate_enrichment(reg_fa_file, reg_motif_count_file,
 
 		
 		for gc in range(10,100,10):
-			#Matched regulated with background set (Expected)
+			#Matched regulated with background set (Expected)			
 			test_motif_to_match = motif_id
 			background_set = []
-			regulated_set = []
+							regulated_set = []
 			result_observed = []
 			result_random = []		
 			length_observed = 0

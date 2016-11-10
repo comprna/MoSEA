@@ -1,6 +1,6 @@
 '''
 #
-# merge fmo and MAF files from TCGA
+# merge *.fmo output and MAF files from TCGA
 # MAF files description: https://wiki.nci.nih.gov/display/TCGA/Mutation+Annotation+Format+%28MAF%29+Specification
 # fmo files: output file gernerated from fimo (meme package) motif scan, converted to bed format by running script: fmo_to_bed_for_suppa_events
 #fmo.bed format: Should have alteast six compulsory columns:
