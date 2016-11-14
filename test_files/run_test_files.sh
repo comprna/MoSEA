@@ -4,11 +4,12 @@
 #Note: The analysis is divided into two steps, A) Motif Scan B) Enrichment
 #For Analysis (A): Motif Scan Steps:
 #====================================
-#Input: One File with Suppa events or Bedfile format  
+#Input: 2 files: Regulated & Control event ids (Suppa events or Bedfile format)
 #Steps: Input_file -> Extract Sequence -> Scan sequences for Motif -> Create count table
 #Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
 
 #For Analysis (B): Enrichment
+#====================================
 #Input: 4 files: (All these files are generated in Analysis A)
 #- Regulated fasta sequences file 
 #- Regulated motif count table 
@@ -23,13 +24,20 @@
 
 
 #Requirements: 
+#Change following paths if necessary
 
-path_fimo="~/meme/bin/fimo"
-path_genome="./MoSEA/test_files/genome/hg19_chr22.fa"
-path_mosealib="./MoSEA/mosealib"
-path_pfms="./MoSEA/test_files/pfms"
-path_kmers="/MoSEA/test_files/kmer"
-path_outdir="./MoSEA/test_files/outdir"
+path_python="/soft/devel/python-2.7/bin/python" #Script not checked for Python 3
+path_fimo="./mosealib/fimo" #Otherwise fimo from MEME-Suite (version 4.11 or higher, Careful:older version truncates Suppa event_ids)
+path_genome="./test_files/genome/hg19.fa" #file should have index file *.fai in same directory (eg: hg19.fa.fai)
+path_pfms="./test_files/motifs/pfms"	  #It could be a dir or just one *.pfm file (ALL pfm files should be with *.pfm extention)
+path_kmers="./test_files/motifs/kmer"	#could be a path to dir or path to one file; all files should be with *.kmer extension
+
+#Change Input file parameters here: regulated events, control events
+#---------------------------------------------------------
+reg_infile="./test_files/dummy/infile/reg_events.ids"
+control_infile="./test_files/dummy/infile/control_events.ids"
+path_outdir="./test_files/dummy/outfile"
+#---------------------------------------------------------
 
 
 
@@ -40,41 +48,37 @@ path_outdir="./MoSEA/test_files/outdir"
 #1. For Regulated Suppa events
 #-------------------------------------------------------
 
-infile="./MoSEA/test_files/infile/reg_events_chr22.ids"
-outfile_reg="$path_outdir/reg_events_chr22.bed"
+fname=$(basename $reg_infile)
+bedfile_reg="$path_outdir/$fname.bed"
 
 #Step1: Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
-python $path_mosealib/suppa_to_bed.py --ifile "$infile" --event SE --ext 200 --ofile $outfile_reg
+$path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200 --ofile $bedfile_reg
 
 
 #Step2: Convert Bedfile to Fasta File
-infile="$path_outdir/$outfile1" #output file created in Step1:
-reg_outfile_fa="$path_outdir/$infile.fa"
-python mosea.py getfasta --bedfile $outfile --genome $path_genome --output $reg_outfile_fa
-
-   
-#Step3:  #Scan fasta sequences for Motifs
-infile="$path_outdir/$outfile_fa" #output file created in Step2:
-fmopfm_outdir="$path_outdir/fmo_pfm"   
-
-#Scan for PFMs
-python mosea.py scan --pfm --pfm_path $path_pfms --fasta $reg_outfile_fa --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
-
+fafile_reg="$bedfile_reg.fa"  #output file name
+$path_python mosea.py getfasta --bedfile $bedfile_reg --genome $path_genome --output $fafile_reg
+ 
+#Step3:  #Scan fasta sequences for Motifs (Example shown for PFMs)
+fmopfm_outdir="$path_outdir/fmo_pfm"  #output dir for scanned motifs
+$path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
 
 #-------------------------------------------------------
-#Repeat the above steps 1,2,3 for Control file:
+# For Control Suppa events (Repeat above steps 1,2,3):
 #--------------------------------------------------------
+fname=$(basename $control_infile)
+bedfile_control="$path_outdir/$fname.bed"
 
-#For Control Suppa events
-infile="./MoSEA/test_files/infile/control_events_chr22.ids"
-outfile_control="$path_outdir/control_events_chr22.bed"
-python $path_mosealib/suppa_to_bed.py --ifile "$infile" --event SE --ext 200 --ofile $outfile_control
 
-control_outfile_fa="$path_outdir/$outfile1.fa"
-python mosea.py getfasta --bedfile $outfile1 --genome $path_genome --output $control_outfile_fa
+#Covert ids to bedfile
+$path_python ./mosealib/suppa_to_bed.py --ifile $control_infile --event SE --ext 200 --ofile $bedfile_control
 
-#Scan fasata sequqnces for PFMs
-python mosea.py scan --pfm --pfm_path $path_pfms --fasta $control_outfile_fa --out_dir $path_outdir/fmo_pfm --fmo_path $path_fimo --count
+#Extract fasta sequence
+fafile_control="$bedfile_control.fa"
+$path_python mosea.py getfasta --bedfile $bedfile_control --genome $path_genome --output $fafile_control
+
+#Scan fasta sequences for PFMs
+$path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_control --out_dir $path_outdir/fmo_pfm --fmo_path $path_fimo --count
 
 
 
@@ -87,18 +91,18 @@ python mosea.py scan --pfm --pfm_path $path_pfms --fasta $control_outfile_fa --o
 
 
 #Regulated files : Fasta sequences and Motif count table
-reg_file_fa=$reg_outfile_fa
-reg_file_count="$reg_file_fa.tab"	
+reg_file_fa=$fafile_reg
+reg_file_count="$fafile_reg.tab"
 	
 #Control files : Fasta sequences and Motif count table
-control_file_fa="$control_outfile_fa"    
-control_file_count="$control_file_fa.tab"
+control_file_fa=$fafile_control  
+control_file_count="$fafile_control.tab"
 
 #Zscore Output file name
 outfile="$path_outdir/zscore_outfile.tab"
 
 #perform enrichment
-python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_file_count \
+$path_python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_file_count \
                        --bg_fa_file $control_file_fa --bg_count_file $control_file_count \
 		       --out_file $outfile
 

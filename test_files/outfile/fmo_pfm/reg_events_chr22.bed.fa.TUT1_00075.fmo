@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+TUT1_00075	ENSG00000128342;SE:chr22:30640050-30640744:30640922-30642666:-;down	15	21	+	8.54651	0.000352		GGATACT

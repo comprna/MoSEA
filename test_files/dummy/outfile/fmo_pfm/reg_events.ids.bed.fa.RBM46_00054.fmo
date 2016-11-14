@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+RBM46_00054	ENSG00000185721;SE:chr22:31816411-31817294:31817385-31819266:+;up	69	75	+	8.05517	0.00095		AATCATA

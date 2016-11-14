@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+HNRNPA1_00022	ENSG00000128342;SE:chr22:30640050-30640744:30640922-30642666:-;down	58	64	+	9.11348	0.000551		TTAGGGG

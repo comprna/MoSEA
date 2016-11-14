@@ -112,7 +112,7 @@ def scan_motif_pfm(fa_file, out_dir, pfm_dir, fimo_path, count_flag):
 
 	cnt = 0
 
-	pval = '1e-3'  #optional to change
+	pval = '1e-3'  #Default p-value, optional to change
 
 	print("scanning Motifs on file: {}".format(fa_file))
 
@@ -287,32 +287,44 @@ def count_motif(fa_file, pfm_dir, out_dir):
 	df = pd.DataFrame({"event" : fa_seq_ids})
 	rowlen = len(fa_seq_ids) 
 
+	pfmfiles = []
+
 	if os.path.isdir(pfm_dir):
-		#Read all motif fmo files (output from fimo run)
-		pfmfiles = [f for f in os.listdir(pfm_dir) if isfile(join(pfm_dir,f)) ]
-	elif os.path.exists(pfm_dir):
+		#Read all motif fmo files 
+		pfmfiles = [f for f in os.listdir(pfm_dir) if (isfile(join(pfm_dir, f)) and os.path.getsize(join(pfm_dir,f)) ) ]
+	
+	elif os.path.exists(pfm_dir) and os.path.getsize(pfm_dir): #if it is just one file instead of a directory
 		pfmfiles = [pfm_dir]	
 
+
 	fa_name = os.path.basename(fa_file) #basename
-	file_name = fa_name + ".tab" 
-	out_file = os.path.join(out_dir, file_name)
+	out_file = fa_file + ".tab"
 
 	fmofiles = []
-	motif_ids_all = []
+
 
 	for pfm in pfmfiles:
 
 		if os.path.isdir(pfm_dir):
-			pfm_name = pfm.split(".")[0] #remove trailing ".pfm"
+			pfm_name =  os.path.basename(pfm) ###edit the path,
+			pfm_name = pfm_name.split(".")[-2]  #remove trailing ".pfm"
 		else:
-			pfm_name =  os.path.basename(pfm) ###edit the path,,
-			pfm_name = pfm_name.split(".")[0] #remove trailing ".pfm"
+			pfm_name = pfm.split(".")[-2] #remove trailing ".pfm"
+			
 
-
-		motif_ids_all.append(pfm_name)
 		scanned_fmo_file_name = fa_name + "." + pfm_name + ".fmo"
-		fmofiles.append(scanned_fmo_file_name)
+
+		#print(os.path.join(out_dir, scanned_fmo_file_name))
+
+		if os.path.getsize(os.path.join(out_dir, scanned_fmo_file_name)):
+			fmofiles.append(scanned_fmo_file_name)
 	
+
+	if not len(fmofiles):
+		print("\n\nNone of the provided motifs found on the Fasta sequences. Exiting!\n\n")
+		quit()
+	
+
 	fmofiles = sorted(fmofiles)
 	collen = len(fmofiles)
 	collen += 1 #adding 1 to no. of cols, for 'event'
@@ -323,6 +335,7 @@ def count_motif(fa_file, pfm_dir, out_dir):
 	collen_org = collen - 1 #because 1 was added earlier, to original count
 
 	print("Counting Motifs on file: {}".format(fa_file))
+
 	for fmofile in fmofiles:
 		
 		cnt += 1
@@ -330,7 +343,7 @@ def count_motif(fa_file, pfm_dir, out_dir):
 
 		motif_id = fmofile.split(".")[-2]	
 		fmofile = os.path.join(out_dir,fmofile)
-		
+
 		motif_count_list = _create_motif_count_list(fmofile, df)
 	
 			
@@ -339,10 +352,10 @@ def count_motif(fa_file, pfm_dir, out_dir):
 			
 		else:
 			print("\nLength mismatch error in creating count table:")
-			print("Length of motif counts set = {}\n".format(len(motif_count_list)))
-			print("Length of fasta sequence ids set = {}\n".format(len(fa_seq_ids)))
+			print("Length of motif counts set = {}".format(len(motif_count_list)))
+			print("Length of fasta sequence ids set = {}".format(len(fa_seq_ids)))
 			print("Please check for motif_id : {}".format(motif_id))
-			print("Exiting!!")
+			print("Exiting!!\n")
 			sys.exit()
 
 		
@@ -352,7 +365,8 @@ def count_motif(fa_file, pfm_dir, out_dir):
 	else:
 		#if all is well, write the df into table:
 		df.to_csv(out_file, sep='\t', index=False)
-		print("\nFile created: {}".format(out_file))
+	
+	print("\nFile created: {}".format(out_file))
 
 
 if __name__ == "__main__":

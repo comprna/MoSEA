@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+KHDRBS3_00034	ENSG00000244509;SE:chr22:39410384-39411600:39411756-39413771:+;E	106	113	+	8.4	0.000715		TATAAAGC

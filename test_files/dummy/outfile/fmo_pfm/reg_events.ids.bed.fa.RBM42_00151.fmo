@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+RBM42_00151	ENSG00000100294;SE:chr22:43529492-43533087:43533304-43537168:-;E	174	180	+	8.42857	0.000725		AACTACC

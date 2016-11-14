@@ -22,11 +22,11 @@ perform enrichment analysis and output zscores for each motif
 def main():
 	#####################
 	# required parameters
-	reg_fa_file = "/home/babita/tmp/brca_se_positive_up.fa"
-	reg_motif_count_file = "/home/babita/tmp/brca_se_positive_up.tab"
-	bg_fa_file = "/home/babita/tmp/brca_se_control_up.fa"
-	bg_motif_count_file = "/home/babita/tmp/brca_se_control_up.tab"
-	output_file =  "/home/babita/tmp/output_motif_enr.txt"
+	reg_fa_file = "~/tmp/brca_se_positive_up.fa"
+	reg_motif_count_file = "~/tmp/brca_se_positive_up.tab"
+	bg_fa_file = "~/tmp/brca_se_control_up.fa"
+	bg_motif_count_file = "~/tmp/brca_se_control_up.tab"
+	output_file =  "~/tmp/output_motif_enr.txt"
 	times_random = int(100)
 	#length_correction_option = 0
 	#length_percentage_correction = 15
@@ -176,7 +176,7 @@ def calculate_enrichment(reg_fa_file, reg_motif_count_file,
 			#Matched regulated with background set (Expected)			
 			test_motif_to_match = motif_id
 			background_set = []
-							regulated_set = []
+			regulated_set = []
 			result_observed = []
 			result_random = []		
 			length_observed = 0

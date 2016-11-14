@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+ZCRB1_00087	ENSG00000100281;SE:chr22:35653550-35658316:35658414-35659071:+;up	8	15	+	9.0315	0.000398		TAATTAAG

@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+G3BP2_00021	ENSG00000185721;SE:chr22:31816411-31817294:31817385-31819266:+;down	118	124	+	8.7305	0.000578		AGGATGT

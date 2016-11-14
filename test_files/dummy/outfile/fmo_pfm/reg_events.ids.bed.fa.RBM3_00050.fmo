@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+RBM3_00050	ENSG00000100281;SE:chr22:35653550-35658316:35658414-35659071:+;down	169	175	+	8.52055	0.00034		GAAACGA

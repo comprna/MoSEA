@@ -1,0 +1,2 @@
+#pattern name	sequence name	start	stop	strand	score	p-value	q-value	matched sequence
+A1CF_00001	ENSG00000100281;SE:chr22:35653550-35658316:35658414-35659071:+;up	7	13	+	8.30709	0.000862		CTAATTA
