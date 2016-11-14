@@ -4,6 +4,8 @@
 
 **MoSEA Modules:**
 --------------------
+-Please refer test_files/run_test_files.sh to run the pipeline and to run MoSEA directly with SUPPA events. 
+
 I. *getfasta*: Extract fasta sequences from given bedfile coordinates.
 --------------------------------------------------------------------
 	Required Input: 
@@ -78,5 +80,85 @@ III. *enrich* : Motif enrichment test analysis between given regulated and backg
 						   --bg_fa_file bg_sample_output.fa --bg_count_file bg_sample_output.space
 						   --out_file my_output_file.tab --rand_count 200 --match_len 1 --len_ext 20
 						   
-IV: *overlap*: Overlapping two motif enrichment files. (In progress)
---------------------------------------------------------------------
+
+
+**Run MoSEA on Suppa events to get enriched Motifs **
+Requirements:
+	-Bedtools
+	-Fimo (MEME-Suite version >version 4.11 or higher)
+	-Genome fasta sequence (\*.fa and \*.fai files)
+	-Motif PFMs or Kmers file or directory 
+	
+Input files:
+	-Suppa event ids for regulated set (or Bedfile cordinates)
+	-Suppa event ids for control set (or Bedfile cordinates)
+	
+
+The analysis is divided into two steps, A) Motif Scan B) Enrichment
+
+For Analysis (A): Motif Scan Steps:
+====================================
+Input: 2 files: Regulated & Control event ids (Suppa events or Bedfile format)
+Steps: Input_file -> Extract Sequence -> Scan sequences for Motif -> Create count table
+Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
+
+For Analysis (B): Enrichment
+#====================================
+#Input: 4 files: (All these files are generated in Analysis A)
+- Regulated fasta sequences file 
+- Regulated motif count table (generated in step A)
+- Control(Background) fasta sequence file
+- Control motif count file (generated in step A)
+
+Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
+
+To test run call this script from MoSEA directory: 
+cd MoSEA/
+./test_files/run_test_files.sh 
+
+(Please point the paths to appropriate directories)
+
+Commands:
+
+***Step1:*** Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
+$path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200 --ofile $bedfile_reg
+
+(Ext : Extension is upstream and downstream regions from the center Exon)
+
+*Step2:* Convert Bedfile to Fasta File
+$path_python mosea.py getfasta --bedfile $bedfile_reg --genome $path_genome --output $fafile_reg
+
+*Step3:*  #Scan fasta sequences for Motifs (Example shown for PFMs)
+fmopfm_outdir="$path_outdir/fmo_pfm"  #output dir for scanned motifs
+$path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
+
+-----------------
+Repeat above three steps for control files as well. Ideally, number of events in control set must be atleast 100x more than regulated set.
+----------------
+
+#========================================
+#Analysis (B): Motif Enrichment Analysis
+#========================================
+
+#Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
+
+
+#Regulated files : Fasta sequences and Motif count table
+reg_file_fa=$fafile_reg
+reg_file_count="$fafile_reg.tab"
+	
+#Control files : Fasta sequences and Motif count table
+control_file_fa=$fafile_control  
+control_file_count="$fafile_control.tab"
+
+#Zscore Output file name
+outfile="$path_outdir/zscore_outfile.tab"
+
+#perform enrichment
+$path_python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_file_count \
+                       --bg_fa_file $control_file_fa --bg_count_file $control_file_count \
+		       --out_file $outfile
+
+
+
+Please run the dummy script in test_files/run_test_files.sh to view the outputs at each step.
