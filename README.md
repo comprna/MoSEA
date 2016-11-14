@@ -107,10 +107,10 @@ Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
 _For Analysis (B): Enrichment_
 -------------------------------------------------
 Input: 4 files: (All these files are generated in Analysis A)
-...* Regulated fasta sequences file 
-...* Regulated motif count table (generated in step A)
-...* Control(Background) fasta sequence file
-...* Control motif count file (generated in step A)
+- Regulated fasta sequences file 
+- Regulated motif count table (generated in step A)
+- Control(Background) fasta sequence file
+- Control motif count file (generated in step A)
 
 Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
 
@@ -137,7 +137,7 @@ Step2: Convert Bedfile to Fasta File
 -------------------------------------------------
 $path_python mosea.py getfasta --bedfile $bedfile_reg --genome $path_genome --output $fafile_reg
 
-Step3:  #Scan fasta sequences for Motifs (Example shown for PFMs)
+Step3:  Scan fasta sequences for Motifs (Example shown for PFMs)
 -------------------------------------------------
 fmopfm_outdir="fmo_pfm"  #output dir for scanned motifs
 $path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
