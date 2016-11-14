@@ -130,7 +130,7 @@ $path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200
 
 (Ext : Extension is upstream and downstream regions from the center Exon)
 
-![alt tag](https://github.com/comprna/MoSEA/img/var_regions_suppa.jpg)
+![Extension img](https://github.com/comprna/MoSEA/blob/master/img/var_regions_suppa.jpg)
 
 
 Step2: Convert Bedfile to Fasta File
