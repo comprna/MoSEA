@@ -103,19 +103,21 @@ The analysis is divided into two steps, A) Motif Scan B) Enrichment
 
 ### For Analysis (A): Motif Scan Steps:
 -------------------------------------------------
-Input: 2 files: Regulated & Control event ids (Suppa events or Bedfile format)
-Steps: Input_file -> Extract Sequence -> Scan sequences for Motif -> Create count table
+* Input: 2 files: 
+- Regulated & Control event ids (Suppa events or Bedfile format)
+
+* Steps: Input_file -> Extract Sequence -> Scan sequences for Motif -> Create count table
 Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
 
 ### For Analysis (B): Enrichment
 -------------------------------------------------
-Input: 4 files: (All these files are generated in Analysis A)
+* Input: 4 files: (All these files are generated in Analysis A)
 - 	Regulated fasta sequences file 
 -  	Regulated motif count table (generated in step A)
 -  	Control(Background) fasta sequence file
 -  	Control motif count file (generated in step A)
 
-Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
+* Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
 
 To test run call this script from MoSEA directory: 
 ``cd MoSEA/
