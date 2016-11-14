@@ -113,9 +113,9 @@ Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
 -------------------------------------------------
 Input: 4 files: (All these files are generated in Analysis A)
 - 	Regulated fasta sequences file 
--  	Regulated motif count table (generated in step A)
+-  	Regulated motif count table 
 -  	Control(Background) fasta sequence file
--  	Control motif count file (generated in step A)
+-  	Control motif count file 
 
  Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
 
