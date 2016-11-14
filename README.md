@@ -155,7 +155,7 @@ Repeat above three steps for control files as well. Ideally, number of events in
 
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
 
-* Step4: * Perform Enrichment
+# Step4: # Perform Enrichment
 ```
 Regulated files : Fasta sequences and Motif count table
 - reg_file_fa
