@@ -120,7 +120,7 @@ cd MoSEA/
 
 Commands:
 
-*Analysis (A): Motif Scan*
+Analysis (A): Motif Scan
 
 
 Step1: Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
@@ -128,6 +128,8 @@ Step1: Convert Suppa events to bedfile format (This step is not necessary if cor
 $path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200 --ofile $bedfile_reg
 
 (Ext : Extension is upstream and downstream regions from the center Exon)
+![GitHub Logo](/img/var_regions_suppa.jpg)
+Format: ![Alt Text]
 
 Step2: Convert Bedfile to Fasta File
 -------------------------------------------------
