@@ -119,45 +119,45 @@ cd MoSEA/
 ./test_files/run_test_files.sh (Please point the paths to appropriate directories)
 
 Commands:
-========================================
-*Analysis (A): Motif Scan*
-========================================
 
-***Step1:*** Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
+*Analysis (A): Motif Scan*
+
+
+Step1: Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
 -------------------------------------------------
 $path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200 --ofile $bedfile_reg
 
 (Ext : Extension is upstream and downstream regions from the center Exon)
 
-*Step2:* Convert Bedfile to Fasta File
+Step2: Convert Bedfile to Fasta File
 -------------------------------------------------
 $path_python mosea.py getfasta --bedfile $bedfile_reg --genome $path_genome --output $fafile_reg
 
-*Step3:*  #Scan fasta sequences for Motifs (Example shown for PFMs)
+Step3:  #Scan fasta sequences for Motifs (Example shown for PFMs)
 -------------------------------------------------
-fmopfm_outdir="$path_outdir/fmo_pfm"  #output dir for scanned motifs
+fmopfm_outdir="fmo_pfm"  #output dir for scanned motifs
 $path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
 
 
 Repeat above three steps for control files as well. Ideally, number of events in control set must be atleast 100x more than regulated set.
 
-========================================
-*Analysis (B): Motif Enrichment Analysis*
-========================================
 
-#Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
+*Analysis (B): Motif Enrichment Analysis*
+
+
+Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
 -------------------------------------------------
 
-#Regulated files : Fasta sequences and Motif count table
-reg_file_fa=$fafile_reg
-reg_file_count="$fafile_reg.tab"
+Regulated files : Fasta sequences and Motif count table
+reg_file_fa
+reg_file_count
 	
-#Control files : Fasta sequences and Motif count table
-control_file_fa=$fafile_control  
-control_file_count="$fafile_control.tab"
+Control files : Fasta sequences and Motif count table
+control_file_fa
+control_file_count
 
 #Zscore Output file name
-outfile="$path_outdir/zscore_outfile.tab"
+outfile="zscore_outfile.tab"
 
 #perform enrichment
 $path_python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_file_count \
