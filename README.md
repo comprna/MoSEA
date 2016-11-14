@@ -85,13 +85,13 @@ III. *enrich* : Motif enrichment test analysis between given regulated and backg
 
 _Run MoSEA on Suppa events to get enriched Motifs_
 -------------------------------------------------
-*	Requirements:
+	Requirements:
 *	Bedtools
 *	Fimo (MEME-Suite version >version 4.11 or higher)
 *	Genome fasta sequence (\*.fa and \*.fai files)
 *	Motif PFMs or Kmers file or directory 
 	
-*	Input files:
+	Input files:
 *	Suppa event ids for regulated set (or Bedfile cordinates)
 *	Suppa event ids for control set (or Bedfile cordinates)
 	
