@@ -86,14 +86,14 @@ III. *enrich* : Motif enrichment test analysis between given regulated and backg
 _Run MoSEA on Suppa events to get enriched Motifs_
 -------------------------------------------------
 *Requirements:
-	*Bedtools
-	*Fimo (MEME-Suite version >version 4.11 or higher)
-	*Genome fasta sequence (\*.fa and \*.fai files)
-	*Motif PFMs or Kmers file or directory 
+..*Bedtools
+..*Fimo (MEME-Suite version >version 4.11 or higher)
+..*Genome fasta sequence (\*.fa and \*.fai files)
+..*Motif PFMs or Kmers file or directory 
 	
 *Input files:
-	*Suppa event ids for regulated set (or Bedfile cordinates)
-	*Suppa event ids for control set (or Bedfile cordinates)
+..*Suppa event ids for regulated set (or Bedfile cordinates)
+..*Suppa event ids for control set (or Bedfile cordinates)
 	
 
 The analysis is divided into two steps, A) Motif Scan B) Enrichment
@@ -107,10 +107,10 @@ Requirement: Genome Fasta file (hg19.fa), Bedtools, FIMO from MEME suite
 _For Analysis (B): Enrichment_
 -------------------------------------------------
 Input: 4 files: (All these files are generated in Analysis A)
-* Regulated fasta sequences file 
-* Regulated motif count table (generated in step A)
-* Control(Background) fasta sequence file
-* Control motif count file (generated in step A)
+...* Regulated fasta sequences file 
+...* Regulated motif count table (generated in step A)
+...* Control(Background) fasta sequence file
+...* Control motif count file (generated in step A)
 
 Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
 
@@ -153,12 +153,12 @@ Required Input:  4 files (2 regulated files: fasta & count_table, 2 control file
 -------------------------------------------------
 
 Regulated files : Fasta sequences and Motif count table
-reg_file_fa
-reg_file_count
+..*reg_file_fa
+..*reg_file_count
 	
 Control files : Fasta sequences and Motif count table
-control_file_fa
-control_file_count
+..*control_file_fa
+..*control_file_count
 
 #Zscore Output file name
 outfile="zscore_outfile.tab"
