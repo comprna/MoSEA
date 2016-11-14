@@ -87,6 +87,7 @@ _Run MoSEA on Suppa events to get enriched Motifs_
 -------------------------------------------------
 Requirements:
 ```
+- 	Python 2.7 (numpy, bio, pandas, StringIO, collections, math)
 - 	Bedtools
 - 	Fimo (MEME-Suite version >version 4.11 or higher)
 - 	Genome fasta sequence (\*.fa and \*.fai files)
@@ -124,7 +125,7 @@ cd MoSEA/
 Commands:
 -----------------------------------------------------------------------------------------------------
 
-** Analysis (A): Motif Scan **
+## Analysis (A): Motif Scan 
 
 
 #### Step1 : Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
@@ -150,7 +151,7 @@ $path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out
 Repeat above three steps for control files as well. Ideally, number of events in control set must be atleast 100x more than regulated set.
 
 
-** Analysis (B): Motif Enrichment Analysis **
+## Analysis (B): Motif Enrichment Analysis 
 
 
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
@@ -171,7 +172,7 @@ outfile="zscore_outfile.tab"
 #perform enrichment
 $path_python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_file_count \
                        --bg_fa_file $control_file_fa --bg_count_file $control_file_count \
-		       --out_file $outfile
+		     	--out_file $outfile
 
 ```
 -------------------------------------------------
