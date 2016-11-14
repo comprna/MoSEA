@@ -120,13 +120,14 @@ To test run call this script from MoSEA directory:
 cd MoSEA/
 ./test_files/run_test_files.sh (Please point the paths to appropriate directories)
 
+
 Commands:
+-----------------------------------------------------------------------------------------------------
+
+** Analysis (A): Motif Scan **
 
 
-_Analysis (A): Motif Scan_
-
-
-Step1: Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
+* Step1 *: Convert Suppa events to bedfile format (This step is not necessary if cordinates are already in bedfile format. Go to step 2 directly.) 
 ```
 $path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200 --ofile $bedfile_reg
 ```
@@ -135,12 +136,12 @@ $path_python ./mosealib/suppa_to_bed.py --ifile $reg_infile --event SE --ext 200
 ![Extension img](https://github.com/comprna/MoSEA/blob/master/img/var_regions_suppa.jpg)
 
 
-Step2: Convert Bedfile to Fasta File
+* Step2: * Convert Bedfile to Fasta File
 ```
 $path_python mosea.py getfasta --bedfile $bedfile_reg --genome $path_genome --output $fafile_reg
 ```
 
-Step3:  Scan fasta sequences for Motifs (Example shown for PFMs)
+* Step3: *  Scan fasta sequences for Motifs (Example shown for PFMs)
 ```
 fmopfm_outdir="fmo_pfm"  #output dir for scanned motifs
 $path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out_dir $fmopfm_outdir --fmo_path $path_fimo --count
@@ -149,12 +150,13 @@ $path_python mosea.py scan --pfm --pfm_path $path_pfms --fasta $fafile_reg --out
 Repeat above three steps for control files as well. Ideally, number of events in control set must be atleast 100x more than regulated set.
 
 
-_Analysis (B): Motif Enrichment Analysis_
+** Analysis (B): Motif Enrichment Analysis **
 
 
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
-```
 
+* Step4: * Perform Enrichment
+```
 Regulated files : Fasta sequences and Motif count table
 - reg_file_fa
 - reg_file_count
