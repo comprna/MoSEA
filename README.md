@@ -94,7 +94,8 @@ Requirements:
 - 	Motif PFMs or Kmers file or directory 
 ```	
 Input files:
-````
+
+```
 - 	Suppa event ids for regulated set (or Bedfile cordinates)
 - 	Suppa event ids for control set (or Bedfile cordinates)
 ```	
@@ -120,9 +121,10 @@ Input: 4 files: (All these files are generated in Analysis A)
  Steps: For each regulated sequence -> create pools of Control seqs matching GC content and length of seq -> randomize 100 times -> count motifs on reg & control -> calculate z-score by observe(reg) vs expected (distribution from control) ((x-mean)/SD) 
 
 To test run call this script from MoSEA directory: 
-``cd MoSEA/
+```
+cd MoSEA/
 ./test_files/run_test_files.sh (Please point the paths to appropriate directories)
-``
+```
 
 
 
