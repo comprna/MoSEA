@@ -364,18 +364,19 @@ def fun_A5_bedfile(in_file, out_file, len_ext, event, mediandiff):
 	ev_strand = ev_all[4]
 
 	if(ev_strand=="-"):
-		s3_e1 = ev_all[2]
-		s3_e2 = ev_all[3]
+		s3_e2 = ev_all[2]
+		s3_e1 = ev_all[3]
 		s3_e1 = s3_e1.split('-')
 		s3 = int(s3_e1[0])
 		e1 = int(s3_e1[1])
+		e1 = int(e1) - 1 #correct for 0-base
 
-		s3_e2 = s3_e2.split('-')
-		e2 = int(s3_e2[1]) - 1 #correct for 0-base
+		#s3_e2 = s3_e2.split('-')
+		#e2 = int(s3_e2[1]) - 1 #correct for 0-base
 
-
-		V1 = ("{}\t{}".format(e2 - len_ext, e2)) 
-		V2 = ("{}\t{}".format(e2, e2 + len_ext)) 
+		V1 = ("{}\t{}".format(e1, e1 + len_ext)) 
+		V2 = ("{}\t{}".format(e1 - len_ext, e1)) 
+		
 
 
 	elif(ev_strand=="+"):
