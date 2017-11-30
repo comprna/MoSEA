@@ -163,8 +163,9 @@ Repeat above three steps for control files as well. Ideally, number of events in
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
 
 **Important**: Please seperate variable region types prior to each enrichment analysis.
-For eg. 
-1)To seperate upstream region of SE event from fasta file (regulated and control):
+For eg.
+
+1) To seperate upstream region of SE event from fasta file (regulated and control):
 grep -A1 ';up' regfile.fa >events_SE_up_reg.fa
 grep -A1 ';up' controlfile.fa >events_SE_up_control.fa
 
