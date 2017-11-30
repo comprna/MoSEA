@@ -175,7 +175,7 @@ grep -A1 ';up' controlfile.fa >events_SE_up_control.fa
 cat reg_file_count | head -1 >up_reg_file_count; grep ';up' reg_file_count >>up_reg_file_count
 cat control_file_count | head -1 >up_cont_file_count; grep ";up" control_file_count >>up_cont_file_count
 ```
-Repeat it for all regions. (Please see run script 'run_test_files_all_events.sh' in test_files/ dir for more information)
+Repeat it for all regions. (Please see run script `test_files/run_script_test_all_events.sh`` for more information)
 
 #### Step4: Perform Enrichment
 ```
