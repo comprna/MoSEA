@@ -166,13 +166,15 @@ Required Input:  4 files (2 regulated files: fasta & count_table, 2 control file
 For eg.
 
 1) To seperate upstream region of SE event from fasta file (regulated and control):
+```
 grep -A1 ';up' regfile.fa >events_SE_up_reg.fa
 grep -A1 ';up' controlfile.fa >events_SE_up_control.fa
-
+```
 2) To seperate upstream region of SE event from count file  (regulated and control):
+```
 cat reg_file_count | head -1 >up_reg_file_count; grep ';up' reg_file_count >>up_reg_file_count
 cat control_file_count | head -1 >up_cont_file_count; grep ";up" control_file_count >>up_cont_file_count
-
+```
 Repeat it for all regions. (Please see run script 'run_test_files_all_events.sh' in test_files/ dir for more information)
 
 #### Step4: Perform Enrichment
