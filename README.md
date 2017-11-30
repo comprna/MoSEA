@@ -160,16 +160,27 @@ Repeat above three steps for control files as well. Ideally, number of events in
 
 ## Analysis (B): Motif Enrichment Analysis 
 
-
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
+
+**Important**: Please seperate variable region types prior to each enrichment analysis.
+For eg. 
+1)To seperate upstream region of SE event from fasta file (regulated and control):
+grep -A1 ';up' regfile.fa >events_SE_up_reg.fa
+grep -A1 ';up' controlfile.fa >events_SE_up_control.fa
+
+2) To seperate upstream region of SE event from count file  (regulated and control):
+cat reg_file_count | head -1 >up_reg_file_count; grep ';up' reg_file_count >>up_reg_file_count
+cat control_file_count | head -1 >up_cont_file_count; grep ";up" control_file_count >>up_cont_file_count
+
+Repeat it for all regions. (Please see run script 'run_test_files_all_events.sh' in test_files/ dir for more information)
 
 #### Step4: Perform Enrichment
 ```
-Regulated files : Fasta sequences and Motif count table
+Regulated files : Fasta sequences and Motif count table (per region type)
 - reg_file_fa
 - reg_file_count
 	
-Control files : Fasta sequences and Motif count table
+Control files : Fasta sequences and Motif count table (per region type)
 - control_file_fa
 - control_file_count
 
