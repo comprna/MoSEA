@@ -162,7 +162,7 @@ Repeat above three steps for control files as well. Ideally, number of events in
 
 Required Input:  4 files (2 regulated files: fasta & count_table, 2 control files: fasta & count_table) generated in Analysis (A).
 
-**Important**: Please seperate variable region types prior to each enrichment analysis.
+**Important**: Only in case of running SUPPA events, please seperate variable region types prior to each enrichment analysis.
 For eg.
 
 1) To seperate upstream region of SE event from fasta file (regulated and control):
@@ -198,3 +198,4 @@ $path_python mosea.py enrich --reg_fa_file $reg_file_fa --reg_count_file $reg_fi
 ```
 -------------------------------------------------
 To run the pipeline all at once, please run the dummy script in ``test_files/run_test_files.sh``
+To run extended version of all SUPPA events with variable region, please run script: ``test_files/run_script_test_all_events.sh``
