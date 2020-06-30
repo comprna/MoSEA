@@ -89,11 +89,15 @@ def main():
         args = parser.parse_args()
         args.func(args)
 
-    except Exception, err:
-        print("\nError in parsing: {}".format(err))
+    # except Exception, err:
+    #     print("\nError in parsing: {}".format(err))
+    #     print(parser.format_help())
+    #     sys.exit(1)
+
+    except Exception as error:
+        print("\nError in parsing: {}".format(error))
         print(parser.format_help())
         sys.exit(1)
-
 
 def getfasta(args):
 
@@ -132,3 +136,4 @@ if __name__ == "__main__":
 #pwd: /home/babita/Documents/scan_motifs
 #command 1: python scripts/find_motif_overlaps.py getFasta -b mock_files/tmp_bed_file -g mock_files/hg19_genome.fa -o output/tmp_bed_file.fa
 #command 2: python scripts/find_motif_overlaps.py scan -fa output/tmp_bed_file.fa -odir output/fmo/ -pfm mock_files/pfm/
+

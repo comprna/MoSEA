@@ -8,8 +8,16 @@ from Bio import SeqIO
 from Bio.SeqUtils import GC
 from time import sleep
 import pandas as pd
-from StringIO import StringIO
-import commands
+
+try:
+	from StringIO import StringIO ## for Python 2
+except ImportError:
+	from io import StringIO ## for Python 3
+
+try:
+	import commands	## for Python 2
+except ImportError:
+	import subprocess ## for Python 3
 
 
 def main():
@@ -139,9 +147,14 @@ def scan_motif_pfm(fa_file, out_dir, pfm_dir, fimo_path, count_flag):
 			os.system("{} --norc --text --thresh {} {} {} > {} 2>/dev/null".format(fimo_path,
 				pval, pfm, fa_file, os.path.join(out_dir,fmo_file_name)))
 
-		except Exception, err: 
-		#else:
-			print "\nError!! Not a valid version of FIMO (MEME-suite). Please install meme-4.9.0 or above\n\n"
+		# except Exception, err:
+		# #else:
+		# 	print "\nError!! Not a valid version of FIMO (MEME-suite). Please install meme-4.9.0 or above\n\n"
+		# 	print("Exception Error {}".format(err))
+		# 	sys.exit()
+
+		except Exception as error:
+			print("\nError!! Not a valid version of FIMO (MEME-suite). Please install meme-4.9.0 or above\n\n")
 			print("Exception Error {}".format(err))
 			sys.exit()
 
