@@ -48,14 +48,14 @@ def main():
 	try:
 		opts, args = getopt.getopt(sys.argv[1:],"h:iel:o:",["ifile=","event=","ext=","ofile="])
 	except getopt.GetoptError:
-		print 'suppa_to_bed.py --ifile <input file> --event <event-type> --ext <length-extension> --ofile <output file>'
+		print('suppa_to_bed.py --ifile <input file> --event <event-type> --ext <length-extension> --ofile <output file>')
 		sys.exit(2)
 
 	if len(opts) == 4:
 
 		for opt, arg in opts:
 			if opt == '-h':
-				print 'create_bedfiles_from_suppa_events.py --ifile <inputfile> --event <event-type> --ext <extension length> --ofile <outputfile>'
+				print('create_bedfiles_from_suppa_events.py --ifile <inputfile> --event <event-type> --ext <extension length> --ofile <outputfile>')
 				#eg.:create_bedfiles_from_suppa_events.py --ifile ~/tmp/brca_control.dpsi --event SE --cancer brca --ofile ~/tmp/brca_control.bed
 				sys.exit()
 			elif opt in ("--ifile"):
@@ -106,8 +106,8 @@ def main():
 		f.close()
 
 	else:
-		print "Error! Incorrect arguments"
-		print '\nUSAGE:python suppa_to_bed.py --ifile <input file> --event <event-type> --ext <length-extension> --ofile <output file>\n'
+		print("Error! Incorrect arguments")
+		print('\nUSAGE:python suppa_to_bed.py --ifile <input file> --event <event-type> --ext <length-extension> --ofile <output file>\n')
 		sys.exit(2)
 
 	

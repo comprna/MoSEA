@@ -5,7 +5,7 @@ import fnmatch
 from os.path import isfile, join
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.Alphabet import IUPAC
+# from Bio.Alphabet import IUPAC
 from Bio.SeqUtils import GC
 import itertools
 import csv

@@ -6,7 +6,6 @@ Output: Motifs in 2) that matched with 1)
 
 import os,sys
 import re
-import regex
 
 def main(argv):
 	in_dir= "/projects_rg/babita/TCGA/pipeline/run12/kmers_analysis/test"
@@ -22,7 +21,7 @@ def main(argv):
 	new_pfmfiles =  [f for f in os.listdir(new_pfms_dir) if os.path.isfile(os.path.join(new_pfms_dir,f)) ]
 
 	for fname in known_pfmfiles:
-		print fname
+		print(fname)
 		with open(fname) as f:
 			content = f.readlines()
 
